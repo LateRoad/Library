@@ -47,29 +47,32 @@
         </div>
     </div>
 </nav>
-<sql:setDataSource
-        var="myDS"
-        driver="com.mysql.jdbc.Driver"
-        url="jdbc:mysql://localhost:3306/library"
-        user="root" password="021929"
-/>
-<sql:query var="list_books" dataSource="${myDS}">
-    SELECT * FROM library.book;
-</sql:query>
-<c:forEach var="user" items="${list_books.rows}">
-    <br>
-    Name: <c:out value="${user.name}"/>
-    <br>
-    Author: <c:out value="${user.author}"/>
-    <br>
-    <%if(((User)session.getAttribute("user")).getLogin().equals(""))%>
-    Borrow by: <c:out value="${user.login}"/>
-    <br>
-
-
-
-
-</c:forEach>
-
+<div class="container">
+    <div class="pull-right">
+        <sql:setDataSource
+                var="myDS"
+                driver="com.mysql.jdbc.Driver"
+                url="jdbc:mysql://localhost:3306/library"
+                user="root" password="021929"
+        />
+        <sql:query var="list_books" dataSource="${myDS}">
+            SELECT * FROM library.book;
+        </sql:query>
+        <c:forEach var="book" items="${list_books.rows}">
+            <br>
+            Name: <c:out value="${book.name}"/>
+            <br>
+            Author: <c:out value="${book.author}"/>
+            <br>
+            <c:if test="${book.login != null}">
+                Borrowed by: <c:out value="${book.login}"/>
+            </c:if>
+            <c:if test="${book.login == null}">
+                <button formmethod="post" type="submit" name="action" value="borrow-${book.id}" class="btn btn-primary">Borrow ${book.name}</button>
+            </c:if>
+            <br>
+        </c:forEach>
+    </div>
+</div>
 </body>
 </html>
