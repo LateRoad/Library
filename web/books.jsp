@@ -49,16 +49,7 @@
 </nav>
 <div class="container">
     <div class="pull-right">
-        <sql:setDataSource
-                var="myDS"
-                driver="com.mysql.jdbc.Driver"
-                url="jdbc:mysql://localhost:3306/library"
-                user="root" password="021929"
-        />
-        <sql:query var="list_books" dataSource="${myDS}">
-            SELECT * FROM library.book;
-        </sql:query>
-        <c:forEach var="book" items="${list_books.rows}">
+        <c:forEach var="book" items="${bookList.rows}">
             <br>
             Name: <c:out value="${book.name}"/>
             <br>
@@ -68,7 +59,7 @@
                 Borrowed by: <c:out value="${book.login}"/>
             </c:if>
             <c:if test="${book.login == null}">
-                <button formmethod="post" type="submit" name="action" value="borrow-${book.id}" class="btn btn-primary">Borrow ${book.name}</button>
+                <button formmethod="post" type="submit" name="action" value="borrow_${book.id}" class="btn btn-primary">Borrow ${book.name}</button>
             </c:if>
             <br>
         </c:forEach>

@@ -95,8 +95,11 @@ public class UserDAO extends AbstractDAO<User> {
             ResultSet resultSet = st.executeQuery(SQL_SELECT_ALL_USERS);) {
             while (resultSet.next()) {
                 User user = new User();
+                user.setId(resultSet.getInt("id"));
                 user.setLogin(resultSet.getString("login"));
                 user.setPassword(resultSet.getString("password"));
+                user.setName(resultSet.getString("name"));
+                user.setSurname(resultSet.getString("surname"));
                 user.setRole(resultSet.getString("role"));
                 users.add(user);
             }

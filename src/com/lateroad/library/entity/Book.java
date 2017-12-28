@@ -8,6 +8,8 @@ public class Book extends Entity {
     private String author;
     private String login;
 
+    public Book(){}
+
     public Book(int id, String name, String author, String login) {
         this.id = id;
         this.name = name;
