@@ -1,7 +1,8 @@
 package com.lateroad.library.servlet;
 
+import com.lateroad.library.bundle.Bundle;
 import com.lateroad.library.entity.User;
-import com.lateroad.library.exception.UserNotFoundException;
+import com.lateroad.library.exception.ItemNotFoundException;
 import com.lateroad.library.service.UserService;
 
 import javax.servlet.RequestDispatcher;
@@ -12,11 +13,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-public class LoginServlet extends HttpServlet {
+public class SignInServlet extends HttpServlet {
     private UserService userService;
 
-    public LoginServlet() {
-        userService = new UserService();
+    public SignInServlet() {
+        userService = UserService.getInstance();
+        Bundle.getInstance();
     }
 
     @Override
@@ -36,14 +38,14 @@ public class LoginServlet extends HttpServlet {
                 User user = null;
                 try {
                     user = userService.userGetByEmailAndPassword(login, password);
-                } catch (UserNotFoundException e) {
+                } catch (ItemNotFoundException e) {
                     e.printStackTrace();
                     //
                 }
                 if (user != null) {
-                    session.setAttribute("PRINCIPAL", user);
+                    session.setAttribute("user", user);
                     RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/home.jsp");
-                    session.setAttribute("username", user.getLogin());
+                 //   session.setAttribute("username", user.getLogin());
                     session.setAttribute("inOrOutLabel", "Выйти");
                     session.setAttribute("inOrOut", "out");
                     session.setAttribute("inOrOutAdress", "/logout.html");

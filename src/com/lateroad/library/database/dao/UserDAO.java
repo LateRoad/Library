@@ -11,7 +11,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class UserDAO extends AbstractDAO<User> {
     public static final String SQL_SELECT_ALL_USERS = "SELECT * FROM library.user";
-    public static final String SQL_FIND_BY_LOGIN = "SELECT * FROM library.user WHERE login=? AND password =?";
+    public static final String SQL_SELECT_BY_LOGIN = "SELECT * FROM library.user WHERE login=? AND password =?";
+    public static final String SQL_DELETE_BY_ID = "SELECT * FROM library.user WHERE id=?";
+    public static final String SQL_INSERT = "INSERT INTO library.user (login, password, name, surname) VALUES (?,?,?,?)";
 
     private static UserDAO instance = null;
     private static ReentrantLock lock = new ReentrantLock();
@@ -31,6 +33,8 @@ public class UserDAO extends AbstractDAO<User> {
         }
         return instance;
     }
+
+    private UserDAO(){}
 
 //    public User findAbonentByLastName(String name) {
 //        User user = new User();
@@ -65,7 +69,7 @@ public class UserDAO extends AbstractDAO<User> {
         User user = null;
         Connection connection = dbPool.getConnection();
 
-        try(PreparedStatement st = connection.prepareStatement(SQL_FIND_BY_LOGIN)){
+        try (PreparedStatement st = connection.prepareStatement(SQL_SELECT_BY_LOGIN)) {
             st.setString(1, wantedUser.getLogin());
             st.setString(2, wantedUser.getPassword());
             ResultSet resultSet = st.executeQuery();
@@ -83,7 +87,7 @@ public class UserDAO extends AbstractDAO<User> {
         } finally {
             dbPool.putConnection(connection);
         }
-       return user;
+        return user;
     }
 
     @Override
@@ -91,8 +95,8 @@ public class UserDAO extends AbstractDAO<User> {
         List<User> users = new ArrayList<>();
         DBPool dbPool = DBPool.getInstance();
         Connection cn = dbPool.getConnection();
-        try(Statement st = cn.createStatement();
-            ResultSet resultSet = st.executeQuery(SQL_SELECT_ALL_USERS);) {
+        try (Statement st = cn.createStatement();
+             ResultSet resultSet = st.executeQuery(SQL_SELECT_ALL_USERS);) {
             while (resultSet.next()) {
                 User user = new User();
                 user.setId(resultSet.getInt("id"));
@@ -113,11 +117,24 @@ public class UserDAO extends AbstractDAO<User> {
 
     @Override
     public void insert(User entity) {
-        throw new UnsupportedOperationException();
+        DBPool dbPool = DBPool.getInstance();
+        Connection connection = dbPool.getConnection();
+
+        try (PreparedStatement st = connection.prepareStatement(SQL_INSERT)) {
+            st.setString(1, entity.getLogin());
+            st.setString(2, entity.getPassword());
+            st.setString(3, entity.getName());
+            st.setString(4, entity.getSurname());
+            st.execute();
+        } catch (SQLException e) {
+            System.err.println("SQL exception (request or table failed): " + e);
+        } finally {
+            dbPool.putConnection(connection);
+        }
     }
 
     @Override
-    public User update(User entity) {
+    public void update(User entity) {
         throw new UnsupportedOperationException();
     }
 
@@ -131,4 +148,17 @@ public class UserDAO extends AbstractDAO<User> {
         throw new UnsupportedOperationException();
     }
 
+    public void delete(String id) {
+        DBPool dbPool = DBPool.getInstance();
+        Connection connection = dbPool.getConnection();
+
+        try (PreparedStatement st = connection.prepareStatement(SQL_DELETE_BY_ID)) {
+            st.setString(1, id);
+            st.execute();
+        } catch (SQLException e) {
+            System.err.println("SQL exception (request or table failed): " + e);
+        } finally {
+            dbPool.putConnection(connection);
+        }
+    }
 }

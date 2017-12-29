@@ -4,6 +4,7 @@ import com.lateroad.library.database.CommonDAO;
 import com.lateroad.library.entity.Entity;
 
 public abstract class AbstractDAO<T extends Entity> implements CommonDAO<T> {
+
 //    protected WrapperConnector connector;
 //
 //

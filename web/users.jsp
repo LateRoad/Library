@@ -27,9 +27,9 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="/books.html">Книги</a></li>
+                <li><a href="/books.html">Книги</a></li>
                 <c:if test="${user.role == \"admin\"}">
-                    <li><a href="/users.html">Пользователи</a></li>
+                    <li class="active"><a href="/users.html">Пользователи</a></li>
                 </c:if>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -54,50 +54,19 @@
     </div>
 </nav>
 <div class="container">
-    <c:if test="${user.role == \"admin\"}">
-        <h1>Книги, ожидающие одобрения на выдачу:</h1>
-        <c:forEach var="wantedBook" items="${wantedBooks}">
-            <form method="POST">
-                <div class="form-group">
-                    <br>
-                    Название: <c:out value="${wantedBook.name}"/>
-                    <br>
-                    Автор: <c:out value="${wantedBook.author}"/>
-                    <br>
-                    <c:out value="${wantedBook.login}"/> подал заявку.
-                    <button name="action" value="accept_${wantedBook.id}_${wantedBook.login}" type="submit" class="btn btn-primary">Одобрить
-                    </button>
-                    <br>
-                </div>
-            </form>
-        </c:forEach>
-    </c:if>
-
-    <h1>Все книги:</h1>
-    <c:forEach var="book" items="${books}">
+    <c:forEach var="user" items="${users}">
         <form method="POST">
             <div class="form-group">
                 <br>
-                Название: <c:out value="${book.name}"/>
+                Логин: <c:out value="${user.login}"/>
                 <br>
-                Автор: <c:out value="${book.author}"/>
+                Имя: <c:out value="${user.name}"/>
                 <br>
-                <c:if test="${book.login != null}">
-                    Взято: <c:out value="${book.login}"/>
-                </c:if>
-                <c:if test="${book.login == null && user.role == \"user\"}">
-                    <button name="action" value="borrow_${book.id}" type="submit" class="btn btn-primary">Взять
-                    </button>
-                </c:if>
-                <c:if test="${book.login != null && user.role == \"admin\"}">
-                    <button name="action" value="unborrow_${book.id}" type="submit" class="btn btn-primary">Забрать
-                    </button>
-                </c:if>
-                <br>
+                Фамилия: <c:out value="${user.surname}"/>
+                <button name="action" value="delete_${user.id}" type="submit" class="btn btn-primary">Удалить</button>
             </div>
         </form>
     </c:forEach>
-
 </div>
 </body>
 </html>

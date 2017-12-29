@@ -15,7 +15,7 @@ public class LogoutServlet extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("inOrOut", "in");
         session.setAttribute("inOrOutLabel", "Войти");
-        session.setAttribute("inOrOutAdress", "/login.html");
+        session.setAttribute("inOrOutAdress", "/signin.html");
         RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/index.jsp");
         requestDispatcher.forward(req, resp);
     }
