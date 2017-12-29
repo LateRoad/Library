@@ -3,6 +3,9 @@ package com.lateroad.library.servlet;
 import com.lateroad.library.bundle.Bundle;
 import com.lateroad.library.entity.User;
 import com.lateroad.library.service.UserService;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +17,12 @@ import java.io.IOException;
 import java.util.ResourceBundle;
 
 public class IndexServlet extends HttpServlet {
+    static {
+        new DOMConfigurator().doConfigure("/Users/Roula/Documents/Docs/projects/PSP_Library/src/resources/log4j2.xml", LogManager.getLoggerRepository());
+    }
+
+    private static final Logger LOGGER = Logger.getLogger(IndexServlet.class);
+
     private UserService userService;
 
     public IndexServlet() {
@@ -25,9 +34,10 @@ public class IndexServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/index.jsp");
         HttpSession session = req.getSession();
+        LOGGER.info("Create session");
         if (session.getAttribute("user") == null) {
             session.setAttribute("inOrOut", "in");
-            session.setAttribute("inOrOutLabel", Bundle.getBundle().getString("inOrOutLabel"));
+            session.setAttribute("inOrOutLabel", Bundle.getTextBundle().getString("inOrOutLabel"));
             session.setAttribute("inOrOutAdress", "/signin.html");
         }
         requestDispatcher.forward(req, resp);
@@ -41,12 +51,12 @@ public class IndexServlet extends HttpServlet {
         String action = reqParameter.split("_")[0];
         switch (action) {
             case "russian":
-                Bundle.setBundle(ResourceBundle.getBundle("resources_ru"));
+                Bundle.setTextBundle(ResourceBundle.getBundle("resources_ru"));
                 Bundle.reload(req);
                 requestDispatcher.forward(req, resp);
                 break;
             case "english":
-                Bundle.setBundle(ResourceBundle.getBundle("resources_en"));
+                Bundle.setTextBundle(ResourceBundle.getBundle("resources_en"));
                 Bundle.reload(req);
                 requestDispatcher.forward(req, resp);
                 break;
@@ -71,6 +81,10 @@ public class IndexServlet extends HttpServlet {
                 }
                 resp.sendRedirect("login.html?loginorpassword=invalid");
                 break;
+            default:
+                LOGGER.error("Undefined action");
+                break;
+
         }
     }
 

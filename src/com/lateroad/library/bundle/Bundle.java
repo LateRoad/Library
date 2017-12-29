@@ -10,7 +10,7 @@ public class Bundle {
     private static Bundle instance = null;
     private static ReentrantLock lock = new ReentrantLock();
     private static AtomicBoolean instanceCreated = new AtomicBoolean(false);
-    private static ResourceBundle bundle;
+    private static ResourceBundle textBundle;
 
     public static Bundle getInstance() {
         if (!instanceCreated.get()) {
@@ -28,22 +28,22 @@ public class Bundle {
     }
 
     private Bundle(){
-        bundle = ResourceBundle.getBundle("resources_ru");
+        textBundle = ResourceBundle.getBundle("resources_ru");
     }
 
-    public static ResourceBundle getBundle() {
-        return bundle;
+    public static ResourceBundle getTextBundle() {
+        return textBundle;
     }
 
-    public static void setBundle(ResourceBundle bundle) {
-        Bundle.bundle = bundle;
+    public static void setTextBundle(ResourceBundle textBundle) {
+        Bundle.textBundle = textBundle;
     }
 
     public static void reload(HttpServletRequest req){
         HttpSession session = req.getSession();
         if (session.getAttribute("user") == null) {
             session.setAttribute("inOrOut", "in");
-            session.setAttribute("inOrOutLabel", Bundle.getBundle().getString("inOrOutLabel"));
+            session.setAttribute("inOrOutLabel", Bundle.getTextBundle().getString("inOrOutLabel"));
             session.setAttribute("inOrOutAdress", "/signin.html");
         }
     }

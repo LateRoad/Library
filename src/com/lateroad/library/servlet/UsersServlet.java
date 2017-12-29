@@ -4,6 +4,7 @@ import com.lateroad.library.bundle.Bundle;
 import com.lateroad.library.entity.User;
 import com.lateroad.library.exception.ItemNotFoundException;
 import com.lateroad.library.service.UserService;
+import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class UsersServlet extends HttpServlet {
+    private static final Logger LOGGER = Logger.getLogger(UsersServlet.class);
     private UserService userService;
 
     public UsersServlet() {
@@ -37,7 +39,6 @@ public class UsersServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
         String reqParameter = req.getParameter("action");
         String action = reqParameter.split("_")[0];
         String userID = reqParameter.split("_")[1];
@@ -46,7 +47,7 @@ public class UsersServlet extends HttpServlet {
                 userService.delete(userID);
                 break;
             default:
-                System.out.println("Error!!!!");
+                LOGGER.error("Undefined action");
                 break;
         }
     }

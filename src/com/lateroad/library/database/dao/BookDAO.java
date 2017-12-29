@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class BookDAO extends AbstractDAO<Book> {
+public class BookDAO implements AbstractDAO<Book> {
     public static final String SQL_SELECT_ALL_BOOKS = "SELECT * FROM library.book";
     public static final String SQL_SELECT_BY_LOGIN = "SELECT * FROM library.book WHERE login=?";
     public static final String SQL_SELECT_BY_ID = "SELECT * FROM library.book WHERE id=?";
@@ -45,15 +45,15 @@ public class BookDAO extends AbstractDAO<Book> {
         Book book = null;
         try (PreparedStatement st = cn.prepareStatement(SQL_SELECT_BY_ID)) {
             st.setString(1, id);
-            ResultSet resultSet = st.executeQuery();
-            while (resultSet.next()) {
-                book = new Book();
-                book.setId(resultSet.getInt("id"));
-                book.setName(resultSet.getString("name"));
-                book.setAuthor(resultSet.getString("author"));
-                book.setLogin(resultSet.getString("login"));
+            try(   ResultSet resultSet = st.executeQuery()){
+                while (resultSet.next()) {
+                    book = new Book();
+                    book.setId(resultSet.getInt("id"));
+                    book.setName(resultSet.getString("name"));
+                    book.setAuthor(resultSet.getString("author"));
+                    book.setLogin(resultSet.getString("login"));
+                }
             }
-
         } catch (SQLException e) {
             System.err.println("SQL exception (request or table failed): " + e);
         } finally {
@@ -129,7 +129,6 @@ public class BookDAO extends AbstractDAO<Book> {
                 book.setName(resultSet.getString("name"));
                 book.setAuthor(resultSet.getString("author"));
                 book.setLogin(resultSet.getString("login"));
-
                 books.add(book);
             }
         } catch (SQLException e) {

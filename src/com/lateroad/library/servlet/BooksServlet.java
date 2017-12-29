@@ -5,6 +5,7 @@ import com.lateroad.library.entity.Book;
 import com.lateroad.library.entity.User;
 import com.lateroad.library.exception.ItemNotFoundException;
 import com.lateroad.library.service.BookService;
+import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class BooksServlet extends HttpServlet {
+    private static final Logger LOGGER = Logger.getLogger(BooksServlet.class);
     private BookService bookService = BookService.getInstance();
 
     public BooksServlet(){
@@ -29,7 +31,7 @@ public class BooksServlet extends HttpServlet {
             List<Book> bookList = bookService.getBookList();
             session.setAttribute("books", bookList);
         } catch (ItemNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error(e);
         }
         if (session.getAttribute("user") != null && "admin".equals(((User) session.getAttribute("user")).getRole())) {
             session.setAttribute("wantedBooks", bookService.getWantedBookList());
@@ -57,7 +59,7 @@ public class BooksServlet extends HttpServlet {
                 bookService.unborrow(bookID);
                 break;
             default:
-                System.out.println("Error!!!!");
+                LOGGER.error("Undefined action");
                 break;
         }
     }

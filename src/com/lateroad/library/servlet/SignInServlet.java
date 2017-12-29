@@ -4,6 +4,7 @@ import com.lateroad.library.bundle.Bundle;
 import com.lateroad.library.entity.User;
 import com.lateroad.library.exception.ItemNotFoundException;
 import com.lateroad.library.service.UserService;
+import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class SignInServlet extends HttpServlet {
+    private static final Logger LOGGER = Logger.getLogger(SignInServlet.class);
     private UserService userService;
 
     public SignInServlet() {
@@ -39,13 +41,11 @@ public class SignInServlet extends HttpServlet {
                 try {
                     user = userService.userGetByEmailAndPassword(login, password);
                 } catch (ItemNotFoundException e) {
-                    e.printStackTrace();
-                    //
+                    LOGGER.error(e);
                 }
                 if (user != null) {
                     session.setAttribute("user", user);
                     RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/home.jsp");
-                 //   session.setAttribute("username", user.getLogin());
                     session.setAttribute("inOrOutLabel", "Выйти");
                     session.setAttribute("inOrOut", "out");
                     session.setAttribute("inOrOutAdress", "/logout.html");
@@ -55,6 +55,7 @@ public class SignInServlet extends HttpServlet {
             }
             resp.sendRedirect("login.html?loginorpassword=invalid");
         }
+        LOGGER.error("Undefined action");
 
     }
 }

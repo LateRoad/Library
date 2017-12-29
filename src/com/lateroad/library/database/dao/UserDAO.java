@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class UserDAO extends AbstractDAO<User> {
+public class UserDAO implements AbstractDAO<User> {
     public static final String SQL_SELECT_ALL_USERS = "SELECT * FROM library.user";
     public static final String SQL_SELECT_BY_LOGIN = "SELECT * FROM library.user WHERE login=? AND password =?";
     public static final String SQL_DELETE_BY_ID = "SELECT * FROM library.user WHERE id=?";

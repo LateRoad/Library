@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class ConnectorDB {
 
     public static Connection getConnection() throws SQLException {
-//        ResourceBundle resource = ResourceBundle.getBundle("database.properties");
+//        ResourceBundle resource = ResourceBundle.getTextBundle("database.properties");
 //        System.out.println(resource.getString("db.url"));
 //        String url = resource.getString("db.url");
 //        String user = resource.getString("db.user");
