@@ -18,7 +18,7 @@ import java.util.ResourceBundle;
 
 public class IndexServlet extends HttpServlet {
     static {
-        new DOMConfigurator().doConfigure("/Users/Roula/Documents/Docs/projects/PSP_Library/src/resources/log4j2.xml", LogManager.getLoggerRepository());
+        new DOMConfigurator().doConfigure("log4j.xml", LogManager.getLoggerRepository());
     }
 
     private static final Logger LOGGER = Logger.getLogger(IndexServlet.class);

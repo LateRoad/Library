@@ -3,7 +3,6 @@ package com.lateroad.library.database;
 import com.lateroad.library.database.dao.ConnectorDB;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
